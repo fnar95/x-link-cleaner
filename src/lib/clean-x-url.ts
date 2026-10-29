@@ -99,27 +99,18 @@ export function cleanXUrl(input: string, options: CleanOptions = {}): CleanResul
   let username: string | null = null;
   let id: string | null = null;
   let rest: string[] = [];
+  const [s0 = "", s1 = "", s2 = "", s3 = ""] = segments;
+  const isStatus = (s: string) => /^status(es)?$/i.test(s);
 
-  // /{username}/status/{id}/...
-  if (
-    segments.length >= 3 &&
-    USERNAME_RE.test(segments[0]) &&
-    /^status(es)?$/i.test(segments[1]) &&
-    ID_RE.test(segments[2])
-  ) {
-    username = segments[0];
-    id = segments[2];
+  if (USERNAME_RE.test(s0) && isStatus(s1) && ID_RE.test(s2)) {
+    // /{username}/status/{id}/...
+    username = s0;
+    id = s2;
     rest = segments.slice(3);
-  } else if (
+  } else if (s0.toLowerCase() === "i" && s1.toLowerCase() === "web" && isStatus(s2) && ID_RE.test(s3)) {
     // /i/web/status/{id}
-    segments.length >= 4 &&
-    segments[0].toLowerCase() === "i" &&
-    segments[1].toLowerCase() === "web" &&
-    /^status(es)?$/i.test(segments[2]) &&
-    ID_RE.test(segments[3])
-  ) {
     username = "i";
-    id = segments[3];
+    id = s3;
     rest = segments.slice(4);
   }
 
@@ -127,11 +118,12 @@ export function cleanXUrl(input: string, options: CleanOptions = {}): CleanResul
 
   let keptPath = "";
   let removedPath: string | null = null;
-  const isMedia = rest.length === 2 && MEDIA_RE.test(rest[0]) && /^\d{1,2}$/.test(rest[1]);
+  const [r0 = "", r1 = ""] = rest;
+  const isMedia = rest.length === 2 && MEDIA_RE.test(r0) && /^\d{1,2}$/.test(r1);
 
   if (rest.length > 0) {
     if (isMedia && !stripMedia) {
-      keptPath = `/${rest[0].toLowerCase()}/${rest[1]}`;
+      keptPath = `/${r0.toLowerCase()}/${r1}`;
     } else {
       removedPath = `/${rest.join("/")}`;
     }
