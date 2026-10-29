@@ -9,7 +9,7 @@ import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 // GitHub Pages build (`bun run build:gh-pages`): the site is served as static files from
 // https://fnar95.github.io/x-link-cleaner/, so it needs the repo sub-path as its base and
 // the single page prerendered to plain HTML. Normal builds (Lovable hosting) are unchanged.
-const isGitHubPages = process.env.GITHUB_PAGES === "true";
+const isGitHubPages = process.env["GITHUB_PAGES"] === "true";
 const GITHUB_PAGES_BASE = "/x-link-cleaner/";
 
 export default defineConfig(
@@ -17,10 +17,14 @@ export default defineConfig(
     ? {
         vite: { base: GITHUB_PAGES_BASE },
         tanstackStart: {
-          server: { entry: "server" },
           pages: [{ path: "/" }],
-          prerender: { enabled: true, autoStaticPathsDiscovery: false, crawlLinks: false },
+          prerender: {
+            enabled: true,
+            autoStaticPathsDiscovery: false,
+            crawlLinks: false,
+          },
         },
+        // GitHub Pages serves static files only; do not build a server bundle.
         nitro: false,
       }
     : {
