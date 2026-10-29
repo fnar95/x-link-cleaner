@@ -6,10 +6,28 @@
 // You can pass additional config via defineConfig({ vite: { ... }, etc... }) if needed.
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 
-export default defineConfig({
-  tanstackStart: {
-    // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).
-    // nitro/vite builds from this
-    server: { entry: "server" },
-  },
-});
+// GitHub Pages build (`bun run build:gh-pages`): the site is served as static files from
+// https://fnar95.github.io/x-link-cleaner/, so it needs the repo sub-path as its base and
+// the single page prerendered to plain HTML. Normal builds (Lovable hosting) are unchanged.
+const isGitHubPages = process.env.GITHUB_PAGES === "true";
+const GITHUB_PAGES_BASE = "/x-link-cleaner/";
+
+export default defineConfig(
+  isGitHubPages
+    ? {
+        vite: { base: GITHUB_PAGES_BASE },
+        tanstackStart: {
+          server: { entry: "server" },
+          pages: [{ path: "/" }],
+          prerender: { enabled: true, autoStaticPathsDiscovery: false, crawlLinks: false },
+        },
+        nitro: false,
+      }
+    : {
+        tanstackStart: {
+          // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).
+          // nitro/vite builds from this
+          server: { entry: "server" },
+        },
+      },
+);
