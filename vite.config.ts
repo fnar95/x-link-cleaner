@@ -21,7 +21,7 @@ export default defineConfig(
           pages: [{ path: "/" }],
           prerender: { enabled: true, autoStaticPathsDiscovery: false, crawlLinks: false },
         },
-        nitro: { preset: "static" },
+        nitro: false,
       }
     : {
         tanstackStart: {
