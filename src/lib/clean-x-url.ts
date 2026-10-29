@@ -49,12 +49,17 @@ export interface CleanOptions {
 const USERNAME_RE = /^[A-Za-z0-9_]{1,15}$/;
 const ID_RE = /^\d{1,20}$/;
 const MEDIA_RE = /^(photo|video)$/i;
-const URL_IN_TEXT_RE =
-  /(?:https?:\/\/)?(?:www\.|mobile\.)?(?:x|twitter)\.com\/[^\s<>"'«»]+/i;
+const LOOKS_LIKE_X_URL_RE = /^(?:https?:\/\/)?(?:www\.|mobile\.)?(?:x|twitter)\.com(?:[/?#]|$)/i;
 
+/**
+ * When the pasted text contains spaces (e.g. a shared message), pick the first
+ * whitespace-separated token that starts like an X/Twitter URL. Matching is
+ * anchored to the token start so "evilx.com" or "user@x.com" never match.
+ */
 function extractCandidate(raw: string): string {
-  const match = raw.match(URL_IN_TEXT_RE);
-  return match ? match[0] : raw;
+  if (!/\s/.test(raw)) return raw;
+  const tokens = raw.split(/\s+/).map((t) => t.replace(/^[«"'(<\[]+|[»"')>\],.،]+$/g, ""));
+  return tokens.find((t) => LOOKS_LIKE_X_URL_RE.test(t)) ?? raw;
 }
 
 export function cleanXUrl(input: string, options: CleanOptions = {}): CleanResult {

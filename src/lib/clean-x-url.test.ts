@@ -44,7 +44,7 @@ describe("cleanXUrl", () => {
   });
 
   it("rejects non-http schemes and credentials", () => {
-    expect(cleanXUrl("javascript:alert(1)//x.com/a/status/1")).toMatchObject({ url: "https://x.com/a/status/1" });
+    expect(cleanXUrl("javascript:alert(1)//x.com/a/status/1")).toEqual({ ok: false, error: "invalid_url" });
     expect(cleanXUrl("javascript:alert(1)")).toEqual({ ok: false, error: "invalid_url" });
     expect(cleanXUrl("https://user:pw@x.com/jack/status/20")).toEqual({
       ok: false,
