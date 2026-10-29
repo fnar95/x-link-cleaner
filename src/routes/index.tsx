@@ -420,8 +420,24 @@ function Index() {
           </dl>
         </section>
 
-        <footer className="text-center text-xs text-muted-foreground">
-          لا تسجيل دخول، لا إحصاءات، ولا طلبات شبكة — كل المعالجة تتم على جهازك.
+        <footer className="flex flex-col items-center gap-4 border-t border-border pt-6 text-center">
+          <p className="text-xs text-muted-foreground">
+            لا تسجيل دخول، لا إحصاءات، ولا طلبات شبكة — كل المعالجة تتم على جهازك.
+          </p>
+          <div className="flex flex-col items-center gap-1.5">
+            <p className="font-display text-sm font-medium text-foreground">
+              فكرة وتصميم أستاذ فاضل المبارك
+            </p>
+            <a
+              href="https://x.com/Fnar9595"
+              target="_blank"
+              rel="noopener noreferrer"
+              referrerPolicy="no-referrer"
+              className="rounded-md px-2 py-1 text-sm text-primary underline-offset-4 transition-colors hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            >
+              تابعوني على تويتر
+            </a>
+          </div>
         </footer>
       </main>
     </div>
